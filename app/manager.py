@@ -41,10 +41,7 @@ class TaskManager:
         with self.__lock:
             conn = self._get_conn()
             cursor = conn.cursor()
-            cursor.execute("
-                INSERT INTO tasks (title, status, payload, result, created_at, priority)
-                VALUES (?, ?, ?, ?, datetime('now'), ?)",
-            (title, "pending", json_dump(payload), json_dump(None), priority)) # json_dump is a function to serialize a Python object (like a dictionary) into a JSON-formatted string. This is useful for storing complex data structures in a database, as SQLite does not have a native JSON data type. By converting the payload and result to JSON strings, we can easily store and retrieve them from the database.
+            cursor.execute("INSERT INTO tasks (title, status, payload, result, created_at, priority) VALUES (?, ?, ?, ?, datetime('now'), ?)", (title, "pending", json_dump(payload), json_dump(None), priority)) # json_dump is a function to serialize a Python object (like a dictionary) into a JSON-formatted string. This is useful for storing complex data structures in a database, as SQLite does not have a native JSON data type. By converting the payload and result to JSON strings, we can easily store and retrieve them from the database.
             task_id = cur.lastrowid # lastrowid is a property of the cursor object that returns the row ID of the last inserted row. This is useful for obtaining the unique identifier of a newly created task, which can be used for further operations like updating or retrieving the task.
             conn.commit()
             conn.close()
